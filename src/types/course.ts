@@ -1,8 +1,4 @@
-export interface Author {
-    id: number;
-    name: string;
-    email: string;
-}
+import { User } from "./user";
 
 export interface Course {
     id: number;
@@ -11,5 +7,5 @@ export interface Course {
     duration: number;
     image?: string;
     status: boolean;
-    author: Author;
+    author: User;
 }
