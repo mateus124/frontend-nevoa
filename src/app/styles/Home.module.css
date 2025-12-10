@@ -16,4 +16,33 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.pagination button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #0070f3;
+    transition: color 0.2s ease;
+}
+
+.pagination button:disabled {
+    color: #ccc;
+    cursor: default;
+}
+
+.pagination span {
+    font-weight: bold;
+    font-size: 1.2rem;
 }
