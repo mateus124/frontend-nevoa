@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "../../context/authContext";
 import styles from "./Header.module.css";
+import { RiUser3Line } from "@remixicon/react"
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -16,7 +17,7 @@ export default function Header() {
       {user ? (
         <div className={styles.userArea}>
           <Link href="/my-courses" className={styles.userName}>
-            {user.name}
+            <RiUser3Line/> {user.name}
           </Link>
           <button onClick={logout} className={styles.logout}>
             Sair

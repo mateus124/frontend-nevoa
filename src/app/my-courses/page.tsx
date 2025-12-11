@@ -7,15 +7,19 @@ import { Course } from "../../types/course";
 import CourseCardEditable from "../../components/CourseCardEditable/CourseCardEditable";
 import CourseModal from "../../components/CourseModal/CourseModal";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
 
 export default function MyCoursesPage() {
   const { user } = useAuth();
+  const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | undefined>(undefined);
 
   const fetchCourses = () => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
     api
       .get("/courses/my", {
         headers: { Authorization: `Bearer ${user.token}` },
@@ -25,6 +29,10 @@ export default function MyCoursesPage() {
   };
 
   useEffect(() => {
+    if (!user) {
+      router.push("/");
+      return;
+    }
     fetchCourses();
   }, [user]);
 
