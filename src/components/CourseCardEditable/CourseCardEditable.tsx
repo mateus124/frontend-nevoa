@@ -4,6 +4,10 @@ import { Course } from "../../types/course";
 import styles from './CourseCardEditable.module.css'
 import { RiTimeLine, RiUserLine } from "@remixicon/react";
 
+function truncateText(text: string, maxChars: number) {
+  return text.length > maxChars ? text.substring(0, maxChars) + "..." : text;
+}
+
 export default function CourseCardEditable({
   course,
   onDelete,
@@ -28,7 +32,7 @@ export default function CourseCardEditable({
       <div>
         <div className={styles.content}>
           <h2>{course.title}</h2>
-          <p>{course.description}</p>
+          <p>{truncateText(course.description, 50)}</p>
           <div className={styles.meta}>
             <span><RiTimeLine/> {course.duration} horas</span>
             <span><RiUserLine/> {course.author.name}</span>

@@ -6,12 +6,13 @@ import { useAuth } from "../../context/authContext";
 import { Course } from "../../types/course";
 import CourseCardEditable from "../../components/CourseCardEditable/CourseCardEditable";
 import CourseModal from "../../components/CourseModal/CourseModal";
-import styles from './page.module.css'
+import styles from "./page.module.css";
 
 export default function MyCoursesPage() {
   const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<Course | undefined>(undefined);
 
   const fetchCourses = () => {
     if (!user) return;
@@ -34,13 +35,20 @@ export default function MyCoursesPage() {
     fetchCourses();
   };
 
+  const handleEdit = (course: Course) => {
+    setSelectedCourse(course);
+    setShowModal(true);
+  };
+
+  const handleNew = () => {
+    setSelectedCourse(undefined);
+    setShowModal(true);
+  };
+
   return (
     <div className={styles.container}>
       <h2>Meus Cursos</h2>
-      <button
-        onClick={() => setShowModal(true)}
-        className={styles.newCourse}
-      >
+      <button onClick={handleNew} className={styles.newCourse}>
         Adicionar novo curso
       </button>
 
@@ -53,7 +61,7 @@ export default function MyCoursesPage() {
               key={course.id}
               course={course}
               onDelete={() => handleDelete(course.id)}
-              onEdit={() => console.log("Editar curso", course.id)}
+              onEdit={() => handleEdit(course)}
             />
           ))}
         </ul>
@@ -61,11 +69,16 @@ export default function MyCoursesPage() {
 
       {showModal && (
         <CourseModal
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedCourse(undefined);
+          }}
           onSuccess={() => {
             setShowModal(false);
+            setSelectedCourse(undefined);
             fetchCourses();
           }}
+          course={selectedCourse}
         />
       )}
     </div>
