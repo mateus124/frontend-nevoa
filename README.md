@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Frontend - Plataforma de Cursos
 
-## Getting Started
+# Como rodar o projeto
+Pré-requisitos
 
-First, run the development server:
+- Node.js (>= 18)
+- NPM ou Yarn
+- Backend rodando (necessário para consumir a API)
+
+## Instalação
+```bash
+# Clonar o repositório
+git clone https://github.com/mateus124/frontend-nevoa
+cd frontend-nevoa
+
+# Instalar dependências
+npm install
+```
+
+## Configuração
+Crie um arquivo .env.local na pasta raiz e configure as variáveis:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080
+NEXT_PUBLIC_UPLOADS_URL=http://localhost:8080
+```
+
+## Iniciar servidor
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Rodando aplicação na porta: 3000
+Acesse em: http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Decisões importantes da arquitetura
+- Framework: Utilizado Next.js pela performance, suporte a SSR/SSG e integração com React.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Estilização: CSS Modules para escopo local e fácil manutenção.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Autenticação: Context API (authContext) para gerenciar estado global do usuário.
 
-## Learn More
+- Componentização: Criação de componentes reutilizáveis como CourseCard, CourseCardEditable, CourseModal.
 
-To learn more about Next.js, take a look at the following resources:
+- Integração com API: Axios configurado em lib/api para chamadas ao backend.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Paginação e busca: Implementadas no catálogo de cursos com debounce para otimizar requisições.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Responsividade: Uso de Flexbox e media queries para garantir boa experiência em dispositivos móveis.
 
-## Deploy on Vercel
+## Observações relevantes do desenvolvimento
+- Proteção de rotas: Páginas como MyCoursesPage só podem ser acessadas por usuários autenticados. Caso contrário, há redirecionamento para /.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Busca de cursos: Implementada com delay de 300ms para evitar excesso de requisições.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Paginação: Navegação entre páginas de cursos com botões de avançar/voltar.
+
+- Cards responsivos: Ajustados para manter tamanho uniforme e reorganizar layout em telas menores.
+
+- Modal de cursos: Usado para criar/editar cursos sem sair da página principal.
+
+## Boas práticas
+- Separação clara entre componentes, páginas e contextos.
+
+- Uso de variáveis de ambiente para URLs da API e uploads.
+
+- Código organizado e modular.
+
+- Tratamento de erros em chamadas à API.
+
+## Links úteis
+Backend API: http://localhost:8080/api/docs
+
+Uploads de imagens: http://localhost:8080/uploads
+
+Frontend rodando: http://localhost:3000
