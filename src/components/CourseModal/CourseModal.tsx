@@ -3,7 +3,7 @@
 import { useState } from "react";
 import api from "../../lib/api";
 import { useAuth } from "../../context/authContext";
-import styles from './CourseModal.module.css';
+import styles from "./CourseModal.module.css";
 
 export default function CourseModal({
   onClose,
@@ -16,6 +16,7 @@ export default function CourseModal({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState<number>(0);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,11 +24,33 @@ export default function CourseModal({
     setError("");
 
     try {
-      await api.post(
+      const res = await api.post(
         "/courses",
-        { title, description, duration },
-        { headers: { Authorization: `Bearer ${user?.token}` } }
+        {
+          title,
+          description,
+          duration,
+          status: true,
+        },
+        {
+          headers: { Authorization: `Bearer ${user?.token}` },
+        }
       );
+
+      const courseId = res.data.id;
+
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        await api.post(`/courses/${courseId}/upload`, formData, {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
+
       onSuccess();
     } catch (err: any) {
       const msg = err?.response?.data?.error || "Erro ao criar curso.";
@@ -37,11 +60,9 @@ export default function CourseModal({
 
   return (
     <div className={styles.container}>
-      <form
-        onSubmit={handleSubmit}
-        className={styles.form}
-      >
+      <form onSubmit={handleSubmit} className={styles.form}>
         <h3>Novo Curso</h3>
+        <label htmlFor="titulo">Título</label>
         <input
           type="text"
           placeholder="Título"
@@ -49,17 +70,26 @@ export default function CourseModal({
           onChange={(e) => setTitle(e.target.value)}
           required
         />
+        <label htmlFor="desc">Descrição</label>
         <textarea
           placeholder="Descrição"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
         />
+        <label htmlFor="duracao">Duração (horas)</label>
         <input
           type="number"
           placeholder="Duração (horas)"
           value={duration}
           onChange={(e) => setDuration(Number(e.target.value))}
+          required
+        />
+        <label htmlFor="file">Imagem</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImageFile(e.target.files?.[0] || null)}
           required
         />
         <button type="submit">Criar</button>
